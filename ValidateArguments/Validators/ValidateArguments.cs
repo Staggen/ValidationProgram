@@ -8,32 +8,15 @@ public class ValidateArguments {
         bool useHelp = loweredArgs.Any(arg => arg.Equals("--help"));
         bool useCount = loweredArgs.Any(arg => arg.Equals("--count"));
         bool useName = loweredArgs.Any(arg => arg.Equals("--name"));
-        // Examine if bad argument count, order or bad parameter
+        // Examine if bad argument count, bad argument order, bad parameter or bad value
         if(ContainsInvalidArgumentCount(loweredArgs, useCount, useName, useHelp))
             return -1;
         if(ContainsInvalidArgumentOrder(loweredArgs))
             return -1;
         if(ContainsInvalidParameter(loweredArgs.Where(arg => arg.StartsWith("--")).ToList()))
             return -1;
-        // Examine if bad value passed with "--count"
-        if(useCount) { // If parameter "--count" used
-            int index = loweredArgs.FindIndex(x => x.Equals("--count"));
-            if(IsParam(loweredArgs[index + 1])) // If argument passed after the "--count" param starts with -- and therefore is a param
-                return -1; // If bad value then return -1
-            if(int.TryParse(loweredArgs[index + 1], out int result)) { // Otherwise try to convert string to integer
-                if(ContainsInvalidNumber(result)) // If integer is less than 10 OR more than 100
-                    return -1; // If bad value then return -1
-            } else // If unable to parse value to int then bad value
-                return -1; // If bad value then return -1
-        }
-        // Examine if bad value passed with "--name"
-        if(useName) { // If parameter "--name" used
-            int index = loweredArgs.FindIndex(x => x.Equals("--name"));
-            if(IsParam(loweredArgs[index + 1])) // If argument passed after the --name param is NOT a value but another param
-                return -1; // If bad value then return -1
-            if(ContainsInvalidName(loweredArgs[index + 1])) // If string shorter than 3 chars OR longer than 10
-                return -1; // If bad value then return -1
-        }
+        if(ContainsInvalidValue(loweredArgs, useCount, useName))
+            return -1;
         // If we got this far then parameters and values are valid. If help requested then return 1
         if(useHelp)
             return 1;
@@ -87,12 +70,27 @@ public class ValidateArguments {
             if(!parameter.Equals("--count") && !parameter.Equals("--name") && !parameter.Equals("--help"))
                 return true; // Invalid param
         }
-        return false; // If we got this far params are valid
+        return false; // If we got this far then params are valid
     }
-    private static bool ContainsInvalidNumber(int number) { // If number less than 10 OR more than 100
-        return number < 10 || number > 100;
-    }
-    private static bool ContainsInvalidName(string name) { // If name.Length less than 3 chars OR more than 10 chars
-        return name.Length < 3 || name.Length > 10;
+    private static bool ContainsInvalidValue(List<string> loweredArgs, bool useCount, bool useName) {
+        if(useCount) { // If parameter "--count" used
+            int index = loweredArgs.FindIndex(x => x.Equals("--count"));
+            if(IsParam(loweredArgs[index + 1])) // If argument passed after the "--count" param starts with -- and therefore is a param
+                return true;
+            if(int.TryParse(loweredArgs[index + 1], out int result)) { // Otherwise try to convert string to integer
+                if(result < 10 || result > 100) // If integer is less than 10 OR more than 100
+                    return true;
+            } else // If unable to parse value to int then bad value
+                return true;
+        }
+        // Examine if bad value passed with "--name"
+        if(useName) { // If parameter "--name" used
+            int index = loweredArgs.FindIndex(x => x.Equals("--name"));
+            if(IsParam(loweredArgs[index + 1])) // If argument passed after the --name param is NOT a value but another param
+                return true;
+            if(loweredArgs[index + 1].Length < 3 || loweredArgs[index + 1].Length > 10) // If string shorter than 3 chars OR longer than 10
+                return true;
+        }
+        return false; // If we got this far then values are valid
     }
 }
