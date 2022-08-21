@@ -1,10 +1,11 @@
-﻿using ConsoleTestApp.Validators;
+﻿using ValidationProgram.Validators;
+using ValidationProgram.Validators.Opti;
 
-namespace ConsoleTestApp;
+namespace ValidationProgram;
 internal class Program {
     private static void Main(string[] args) {
         string[] arguments = new string[] { "--count", "10", "--name", "cookies", "--helP" };
-        var result = ValidateArguments.Validate(arguments);
+        var result = OptiValidateArguments.Validate(arguments);
         Console.WriteLine(result);
     }
 }

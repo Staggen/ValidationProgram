@@ -1,4 +1,4 @@
-using ConsoleTestApp.Validators;
+using ValidationProgram.Validators;
 
 namespace ConsoleTestAppTests.Validators;
 public class ValidateArgumentsTests {
