@@ -1,48 +1,47 @@
 ﻿namespace ValidationProgram.Validators.Opti;
 public class OptiValidateArguments {
-    public static string[] GetParametersUsingStartsWith(string[] args) {
-        string[] parameters = new string[args.Length];
-        int paramCountTracker = 0;
-        for(int i = 0; i < args.Length; i++) {
-            if(!args[i].StartsWith("--"))
-                continue;
-            args[i] = args[i].ToLower();
-            parameters[paramCountTracker] = args[i];
-            paramCountTracker++;
-        }
-        return parameters;
-    }
-    public static string[] GetParametersUsingSubstring(string[] args) {
-        string[] parameters = new string[args.Length];
-        int paramCountTracker = 0;
-        for(int i = 0; i < args.Length; i++) {
-            if(args[i].Length < 2)
-                continue;
-            if(!args[i].Substring(0, 2).Equals("--"))
-                continue;
-            args[i] = args[i].ToLower();
-            parameters[paramCountTracker] = args[i];
-            paramCountTracker++;
-        }
-        return parameters;
-    }
-    public static string[] GetParametersUsingSpan(string[] args) {
-        string[] parameters = new string[args.Length];
-        int paramCountTracker = 0;
-        for(int i = 0; i < args.Length; i++) {
-            var argAsSpan = args[i].AsSpan();
-            if(argAsSpan.Length < 2)
-                continue;
-            var slice = argAsSpan.Slice(0, 2);
-            if(slice[0] == '-' && slice[1] == '-')
-                continue;
-            args[i] = args[i].ToLower();
-            parameters[paramCountTracker] = args[i];
-            paramCountTracker++;
-        }
-        return parameters;
-    }
-
+    //public static string[] GetParametersUsingStartsWith(string[] args) {
+    //    string[] parameters = new string[args.Length];
+    //    int paramCountTracker = 0;
+    //    for(int i = 0; i < args.Length; i++) {
+    //        if(!args[i].StartsWith("--"))
+    //            continue;
+    //        args[i] = args[i].ToLower();
+    //        parameters[paramCountTracker] = args[i];
+    //        paramCountTracker++;
+    //    }
+    //    return parameters;
+    //}
+    //public static string[] GetParametersUsingSubstring(string[] args) {
+    //    string[] parameters = new string[args.Length];
+    //    int paramCountTracker = 0;
+    //    for(int i = 0; i < args.Length; i++) {
+    //        if(args[i].Length < 2)
+    //            continue;
+    //        if(!args[i].Substring(0, 2).Equals("--"))
+    //            continue;
+    //        args[i] = args[i].ToLower();
+    //        parameters[paramCountTracker] = args[i];
+    //        paramCountTracker++;
+    //    }
+    //    return parameters;
+    //}
+    //public static string[] GetParametersUsingSpan(string[] args) {
+    //    string[] parameters = new string[args.Length];
+    //    int paramCountTracker = 0;
+    //    for(int i = 0; i < args.Length; i++) {
+    //        var argAsSpan = args[i].AsSpan();
+    //        if(argAsSpan.Length < 2)
+    //            continue;
+    //        var slice = argAsSpan.Slice(0, 2);
+    //        if(slice[0] == '-' && slice[1] == '-')
+    //            continue;
+    //        args[i] = args[i].ToLower();
+    //        parameters[paramCountTracker] = args[i];
+    //        paramCountTracker++;
+    //    }
+    //    return parameters;
+    //}
     public static int Validate(string[] args) {
         if(args.Length == 0) // If no arguments passed
             return -1;
