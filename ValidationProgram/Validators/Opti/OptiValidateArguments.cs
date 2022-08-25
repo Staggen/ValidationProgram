@@ -34,7 +34,7 @@ public class OptiValidateArguments {
     //        if(argAsSpan.Length < 2)
     //            continue;
     //        var slice = argAsSpan.Slice(0, 2);
-    //        if(slice[0] == '-' && slice[1] == '-')
+    //        if(slice[0] != '-' || slice[1] != '-') // Both need to be '-'
     //            continue;
     //        args[i] = args[i].ToLower();
     //        parameters[paramCountTracker] = args[i];
@@ -54,10 +54,9 @@ public class OptiValidateArguments {
         int paraIndex = 0;
         for(int i = 0; i < args.Length; i++) {
             var valueAsSpan = args[i].AsSpan();
-            if(valueAsSpan.Length < 6) { // Shortest parameter is "--help" and "--name", both at 6 characters in length
+            if(valueAsSpan.Length < 6) // Shortest parameter is "--help" and "--name", both at 6 characters in length
                 continue;
-            }
-            var slice = valueAsSpan[..2];
+            var slice = valueAsSpan.Slice(0, 2);
             if(slice[0] != '-' && slice[1] != '-') // If argument does NOT start with "--" and therefore is a value
                 continue;
             args[i] = args[i].ToLower(); // Replace parameter value with its lowered result
